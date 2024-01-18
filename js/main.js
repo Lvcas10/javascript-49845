@@ -1,108 +1,67 @@
-/* 
-Simulador de aguinaldo 
-ingresar 5 empleados o los que quiera
-ingresar el suelgo de cada uno
-agregar el 50% a cada sueldo 
-mostrar resultados
-*/
+const list = [
+    { id: 1, product: "Teclado Redragon Kumara K552",    category: "Teclado Mecanico",  price: 56000},
+    { id: 2, product: "Teclado HyperX Alloy Origins",    category: "Teclado Mecanico",  price: 90000},
+    { id: 3, product: "Mouse Logitech G502",             category: "Gamer",             price: 65000},
+    { id: 4, product: "Auriculares HyperX Cloud Flight", category: "Gamer",             price: 110000},
+    { id: 5, product: "Auriculares Logitech G733",       category: "Gamer",             price: 220000},
+    { id: 6, product: "Auriculares G Pro",               category: "Gamer",             price: 190000},
+]
 
-let empleado;
-let dni;
-let rol;
-let sueldo;
-let calcularAguinaldo;
-let totalEmpleados;
-
-function validarEmpleado (nombre){
-    if (nombre == "" || (nombre.length < 3)){
-        return false;
+class TopProducts {
+    constructor (list){
+        this.list = list;
     }
-    else {
-        return true;
-    }
-}
 
-function validarRol (posicion){
-    if ((posicion === "administrador") || (posicion === "gerente") || (posicion === "empleado")){
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-function validarSueldo (salario){
-    if ( !isNaN (salario)){
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-function aguinaldo (pago){
-    let resultado  = pago * 1.50;
-    return resultado;
-}
-
-function validarDni (documento){
-    if ( (documento >= 1) && (documento < 100000000) && !isNaN(documento) ){
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-
-totalEmpleados = parseInt ( prompt("¿Cuantos empleados hay?"))
-
-for ( let i=1; i <= totalEmpleados; i++) {
-
-    do { //valida Empleado si no, vuelve a pedirlo
-        empleado = prompt("Nombre Completo del Empleado");
-
-        if (! validarEmpleado (empleado)){
-            alert("Nombre Invalido");
+    addProduct(product) {
+        if (product.product && product.category && product.price && typeof product.price === 'number') {
+            const id = this.list.length + 1;
+            product.id = id;
+            this.list.push(product);
+        } else {
+            console.log("Error: Producto no válido");
         }
     }
 
-    while (! validarEmpleado (empleado))
-
-    do { //valida DNI si no, vuelve a pedirlo
-        dni = prompt("DNI");
-        if (! validarDni (dni)){
-            alert ("DNI Invalido");
-        }
+    getProductById(id){
+        const product = this.list.find (item => item.id === id);
+        return product ? product : "No Se Encuentra el Producto"
     }
 
-    while (! validarDni (dni))
-
-    do { //valida Rol si no, vuelve a pedirlo
-        rol = prompt("Rol")
-        if (! validarRol (rol)){
-            alert ("Rol Invalido")
-        }
+    getProductByCategory(category){
+        const list = this.list.filter(item => item.category.toLowerCase().includes(category.toLowerCase()));
+        return list;
     }
 
-    while (! validarRol (rol))
-
-    do {
-        sueldo =prompt("Salario")
-        if (! validarSueldo (sueldo)){
-            alert("Salario Invalido")
-        }
+    getProductByName(product){
+        const list = this.list.filter(item => item.product.toLowerCase().includes(product.toLowerCase()));
+        return list;
     }
 
-    while (! validarSueldo (sueldo))
-
-    sueldo = aguinaldo(sueldo)
-
-    let mensaje = empleado + ` | ` + dni + ` | ` + rol + ` | ` + sueldo;
-
-    console.log (mensaje);
-
-    alert(mensaje);
+    showProduct(){
+        console.table(this.list)
+    }
 }
+
+const pdt = new TopProducts(list);
+
+let producto = prompt("Producto"); 
+let category;
+let price;
+
+do {
+    category = prompt("Categoria");
+    price = parseInt(prompt("Precio"));
+        if (isNaN(price)) {
+        console.log("Error: Precio no válido");
+        continue;
+    }
+    pdt.addProduct({ product: producto, category: category, price: price });
+    pdt.showProduct();
+    producto = prompt("Producto");
+
+} 
+while (producto.toLowerCase() != "salir")
+
+
 
 
