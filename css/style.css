@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+main {
+    min-height: 80vh;
+    width: 70%;
+    margin: 0 auto;
+}
+
+header {
+    height: 15vh;
+    background-color: #B4D6D3;
+    color: white;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: start;
+    position: sticky;
+    top: -1rem;
+    z-index: 3; 
+}
+
+h1 {
+position: relative;
+padding: 0;
+}
+
