@@ -75,7 +75,7 @@ const renderProducts = (list) => {
         listProducts.innerHTML +=
             `<div class="col-sm-4 col-md-3">
                 <div class="card p-2">
-                    <h4>${product.name} </h4>
+                    <h4 class="text-center">${product.name} </h4>
                     <img class="img-fluid" src="${product.img}" alt="${product.name}">
                     <p class="text-center">${product.category}
                     <h3 class="text-center">$${product.price} </h3>
