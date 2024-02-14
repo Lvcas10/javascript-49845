@@ -10,7 +10,7 @@ const btnClose = document.querySelector('#btnClose');
 const btnSave = document.querySelector('#btnSave');
 const btnOrder = document.querySelector('#btnOrder');
 const btnOrderUp = document.querySelector('#btnOrderUp');
-
+let products_list = []; 
 const listCart = JSON.parse( localStorage.getItem('cart') ) || [];
 const cart = new Cart(listCart);
 
@@ -28,7 +28,7 @@ btnClose.addEventListener('click', () => {
 })
 
 btnOrder.addEventListener('click', ()=> {
-    products.sort(  (a, b ) => {
+    products_list.sort(  (a, b ) => {
         if(  a.price < b.price  ){
             return -1
         }
@@ -39,11 +39,16 @@ btnOrder.addEventListener('click', ()=> {
         return 0
     } )
 
-    renderProducts(products);
+    renderProducts(products_list);
 })
+
+const filtroCategoria = (id_category) => {
+    const newList = products_list.filter ((product)=> product.id_category == id_category)
+    renderProducts(newList);
+}
 
 btnOrderUp.addEventListener('click', ()=> {
-    products.sort(  (a, b ) => {
+    products_list.sort(  (a, b ) => {
         if ( a.price > b.price){
             return -1
         }
@@ -54,20 +59,27 @@ btnOrderUp.addEventListener('click', ()=> {
         return 0
     } )
 
-    renderProducts(products);
+    renderProducts(products_list);
 })
 
-selectCategory.addEventListener('click', (event) => {
-    const search = selectCategory.value
-    const newList = products.filter(  (product) => product.category.toLowerCase().includes( search.toLowerCase() ) );
-    renderProducts(newList);
+selectCategory.addEventListener('change', (e) => {
+    const id_category = selectCategory.value;
+    filtroCategoria(id_category);
 })
 
 inputSearch.addEventListener('input', (event) => {
     const search = inputSearch.value
-    const newList = products.filter(  (product) => product.name.toLowerCase().includes( search.toLowerCase() ) );
+    const newList = products_list.filter(  (product) => product.name.toLowerCase().includes( search.toLowerCase() ) );
     renderProducts(newList);
 })
+
+const addToCart = (evento) => {
+    const id = evento.target.id;
+    const product = products_list.find (item => item.id_product == id );
+    console.log(product);
+    cart.addToCart(product);
+    cartCount.innerText = cart.getCount();
+}
 
 const renderProducts = (list) => {
     listProducts.innerHTML = '';
@@ -77,9 +89,8 @@ const renderProducts = (list) => {
                 <div class="card p-2">
                     <h4 class="text-center">${product.name} </h4>
                     <img class="img-fluid" src="${product.img}" alt="${product.name}">
-                    <p class="text-center">${product.category}
                     <h3 class="text-center">$${product.price} </h3>
-                    <button id="${product.id} " type="button" class="btn btn-primary btnAddCart">
+                    <button id="${product.id_product} " type="button" class="btn btn-primary btnAddCart">
                         <i class="fa-solid fa-cart-plus"></i> Agregar
                     </button>
                 </div>
@@ -93,13 +104,6 @@ const renderProducts = (list) => {
     })
 }
 
-const addToCart = (evento) => {
-    const id = evento.target.id;
-    const product = products.find (item => item.id == id );
-    console.log(product);
-    cart.addToCart(product);
-    cartCount.innerText = cart.getCount();
-}
 
 const redenCart = (list) => {
     modalListProducts.innerHTML = '';
@@ -114,4 +118,30 @@ const redenCart = (list) => {
     });
 }
 
-renderProducts( products);
+const renderCategory = (list) => {
+    selectCategory.innerHTML = "";
+list.forEach(category => {
+        selectCategory.innerHTML += 
+        `<option value="${category.id_category}">${category.name}</option>`
+    });
+}
+
+
+
+const getProducts = async () => {
+
+    try {
+        const endPoint = "data.json";
+        const resp = await fetch(endPoint);
+        const json = await resp.json();
+        const {products, category} = json;
+        products_list = products;
+
+        renderProducts (products); 
+        renderCategory (category);
+    } catch (error) {
+        
+    }
+}
+
+getProducts();
