@@ -110,6 +110,10 @@
         {
             "id_category": 3,
             "name": "componentes"
+        },
+        {
+            "id_category": 4,
+            "name": "todo"
         }
     ]
 }

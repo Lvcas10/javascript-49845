@@ -13,6 +13,15 @@ const btnOrderUp = document.querySelector('#btnOrderUp');
 let products_list = []; 
 const listCart = JSON.parse( localStorage.getItem('cart') ) || [];
 const cart = new Cart(listCart);
+document.getElementById('clearCartButton').addEventListener('click', clearCart);
+
+function clearCart() {
+    localStorage.removeItem('cart');
+    /* cart = new Cart();
+    cartCount.innerText = 0;
+    cartSum.innerText = 0;  */
+    redenCart(cart.getProducts()); 
+}
 
 cartCount.innerText = cart.getCount();
 
@@ -21,6 +30,18 @@ btnModalCarrito.addEventListener('click', function(){
     redenCart(list);
     cartSum.innerText = cart.getSum();
     modal.show();
+})
+
+btnSave.addEventListener("click", () => {
+    Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Tu compra fue realizada correctamente",
+        showConfirmButton: false,
+        timer: 2000
+    });
+    modal.hide();
+    localStorage.removeItem("cart");
 })
 
 btnClose.addEventListener('click', () => {
@@ -43,8 +64,12 @@ btnOrder.addEventListener('click', ()=> {
 })
 
 const filtroCategoria = (id_category) => {
-    const newList = products_list.filter ((product)=> product.id_category == id_category)
-    renderProducts(newList);
+    if (id_category === null) { // Si no se proporciona una categoría, mostrar todos los productos
+        renderProducts(products_list);
+    } else {
+        const newList = products_list.filter((product) => product.id_category == id_category);
+        renderProducts(newList);
+    }
 }
 
 btnOrderUp.addEventListener('click', ()=> {
@@ -64,8 +89,14 @@ btnOrderUp.addEventListener('click', ()=> {
 
 selectCategory.addEventListener('change', (e) => {
     const id_category = selectCategory.value;
-    filtroCategoria(id_category);
-})
+    if (id_category === "4") {
+        filtroCategoria(null);
+        inputSearch.disabled = false;
+    } else {
+        filtroCategoria(id_category);
+        inputSearch.disabled = true;
+    }
+});
 
 inputSearch.addEventListener('input', (event) => {
     const search = inputSearch.value
@@ -79,6 +110,16 @@ const addToCart = (evento) => {
     console.log(product);
     cart.addToCart(product);
     cartCount.innerText = cart.getCount();
+
+    Toastify({
+        text: "Producto Agregado",
+        gravity: "bottom",
+        position: 'left',
+        close: true,
+        style: {
+        background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+        }
+    }).showToast();
 }
 
 const renderProducts = (list) => {
@@ -104,7 +145,6 @@ const renderProducts = (list) => {
     })
 }
 
-
 const redenCart = (list) => {
     modalListProducts.innerHTML = '';
     list.forEach( product => {
@@ -125,8 +165,6 @@ list.forEach(category => {
         `<option value="${category.id_category}">${category.name}</option>`
     });
 }
-
-
 
 const getProducts = async () => {
 

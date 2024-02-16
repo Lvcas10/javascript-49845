@@ -3,10 +3,10 @@ class Cart {
         this.cart = list;
     }
 
-    addToCart( {id, name, img, price, category} ){
-        const index = this.cart.findIndex(  product => product.id == id );
+    addToCart( {id_product, name, img, price, category} ){
+        const index = this.cart.findIndex(  product => product.id == id_product );
         if( index == -1){
-            this.cart.push( {id, name, price, units: 1} );
+            this.cart.push( {id_product, name, price, units: 1} );
         } else {
             this.cart[index].units += 1;
         }
