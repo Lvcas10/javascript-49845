@@ -15,6 +15,11 @@ class Cart {
     }
     
 
+    removeProduct (id_product) {
+        this.cart = list.cart.filter((item) => item.id_product !== id_product)
+        localStorage.setItem('cart', JSON.stringify(this.cart));
+    }
+
     getProducts (){
         return this.cart;
     }

@@ -148,12 +148,17 @@ const renderProducts = (list) => {
 const redenCart = (list) => {
     modalListProducts.innerHTML = '';
     list.forEach( product => {
+        const removeProduct = () => {
+            console.log ('hola')
+            cart.removeProduct (product.id_product)
+        }
         modalListProducts.innerHTML += // html
             `<tr>
-                <td> ${product.name} </td>
-                <td> ${product.units}</td>
+                <td>${product.name}</td>
+                <td>${product.units}</td>
                 <td>$${product.price}</td>
                 <td>$${product.price * product.units}</td>
+                <td><button onclick="${removeProduct}">X</button></td>
             </tr>`
     });
 }
