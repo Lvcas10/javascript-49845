@@ -147,19 +147,41 @@ const renderProducts = (list) => {
 
 const redenCart = (list) => {
     modalListProducts.innerHTML = '';
-    list.forEach( product => {
-        const removeProduct = () => {
-            console.log ('hola')
-            cart.removeProduct (product.id_product)
-        }
-        modalListProducts.innerHTML += // html
-            `<tr>
-                <td>${product.name}</td>
-                <td>${product.units}</td>
-                <td>$${product.price}</td>
-                <td>$${product.price * product.units}</td>
-                <td><button onclick="${removeProduct}">X</button></td>
-            </tr>`
+
+    list.forEach((product, index) => {
+        const tr = document.createElement('tr');
+        const tdName = document.createElement('td');
+        const tdUnits = document.createElement('td');
+        const tdPrice = document.createElement('td');
+        const tdTotal = document.createElement('td');
+        const tdButton = document.createElement('td');
+        const button = document.createElement('button');
+
+        button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+        </svg>`;
+        button.classList.add('btn', 'btn-sm', 'btn-danger', 'text-white')
+
+        button.addEventListener('click', () => {
+            cart.removeProduct(index);
+            redenCart(cart.getProducts());
+        });
+
+        tdButton.appendChild(button);
+
+        tdName.innerText = product.name;
+        tdUnits.innerText = product.units;
+        tdPrice.innerText = `$${product.price}`;
+        tdTotal.innerText = `$${product.price * product.units}`;
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdUnits);
+        tr.appendChild(tdPrice);
+        tr.appendChild(tdTotal);
+        tr.appendChild(tdButton);
+        
+        modalListProducts.appendChild(tr);
     });
 }
 
